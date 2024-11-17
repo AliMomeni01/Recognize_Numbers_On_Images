@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import accuracy_score,precision_score,recall_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 
 digits = load_digits()
 #print(digits.DESCR)
@@ -17,9 +18,9 @@ x = digits.images[0]
 print(digits.target[0])
 plt.gray()
 plt.imshow(x)
-plt.show()
+#plt.show()
 
-x_train,x_test,y_train,y_test = train_test_split(digits.data, digits.target, test_size=30)
+x_train,x_test,y_train,y_test = train_test_split(digits.data, digits.target, test_size=0.3)
 scaler = MinMaxScaler(feature_range=(0,1))
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
@@ -41,3 +42,12 @@ y_pred_train = rf.predict(x_train)
 y_pred_test = rf.predict(x_test)
 
 acc_train_rf,acc_test_rf,p_rf,r_rf = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
+
+svm = SVC(kernel= "linear")
+svm.fit(x_train,y_train)
+
+y_pred_train = svm.predict(x_train)
+y_pred_test = svm.predict(x_test)
+
+
+acc_train_svm,acc_test_svm,p_svm,r_svm = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
