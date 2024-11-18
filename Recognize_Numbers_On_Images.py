@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score,precision_score,recall_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 digits = load_digits()
 #print(digits.DESCR)
@@ -57,4 +58,9 @@ y_pred_test = ann.predict(x_test)
 
 acc_train_ann,acc_test_ann,p_ann,r_ann = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
 
+kn = KNeighborsClassifier(n_neighbors=8)
+kn.fit(x_train,y_train)
+y_pred_train = kn.predict(x_train)
+y_pred_test = kn.predict(x_test)
 
+acc_train_kn,acc_test_kn,p_kn,r_kn = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
