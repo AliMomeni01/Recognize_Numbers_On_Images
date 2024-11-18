@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import accuracy_score,precision_score,recall_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 
 digits = load_digits()
 #print(digits.DESCR)
@@ -15,12 +16,12 @@ digits = load_digits()
 #c = digits.images.shape
 #print(c)
 x = digits.images[0]
-print(digits.target[0])
+#print(digits.target[0])
 plt.gray()
 plt.imshow(x)
 #plt.show()
 
-x_train,x_test,y_train,y_test = train_test_split(digits.data, digits.target, test_size=0.3)
+x_train,x_test,y_train,y_test = train_test_split(digits.data, digits.target, test_size=0.3, random_state=45)
 scaler = MinMaxScaler(feature_range=(0,1))
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
@@ -45,9 +46,15 @@ acc_train_rf,acc_test_rf,p_rf,r_rf = calculat_metrics(y_train,y_test,y_pred_trai
 
 svm = SVC(kernel= "linear")
 svm.fit(x_train,y_train)
-
 y_pred_train = svm.predict(x_train)
 y_pred_test = svm.predict(x_test)
-
-
 acc_train_svm,acc_test_svm,p_svm,r_svm = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
+
+ann = MLPClassifier(random_state=45 ,hidden_layer_sizes=256, solver= "lbfgs",max_iter=250, learning_rate_init=0.001)
+ann.fit(x_train,y_train)
+y_pred_train = ann.predict(x_train)
+y_pred_test = ann.predict(x_test)
+
+acc_train_ann,acc_test_ann,p_ann,r_ann = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
+
+
