@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
 
 digits = load_digits()
 #print(digits.DESCR)
@@ -16,10 +17,10 @@ digits = load_digits()
 #print(b)
 #c = digits.images.shape
 #print(c)
-x = digits.images[0]
+#x = digits.images[0]
 #print(digits.target[0])
-plt.gray()
-plt.imshow(x)
+#plt.gray()
+#plt.imshow(x)
 #plt.show()
 
 x_train,x_test,y_train,y_test = train_test_split(digits.data, digits.target, test_size=0.3, random_state=45)
@@ -49,6 +50,7 @@ svm = SVC(kernel= "linear")
 svm.fit(x_train,y_train)
 y_pred_train = svm.predict(x_train)
 y_pred_test = svm.predict(x_test)
+
 acc_train_svm,acc_test_svm,p_svm,r_svm = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
 
 ann = MLPClassifier(random_state=45 ,hidden_layer_sizes=256, solver= "lbfgs",max_iter=250, learning_rate_init=0.001)
@@ -64,3 +66,30 @@ y_pred_train = kn.predict(x_train)
 y_pred_test = kn.predict(x_test)
 
 acc_train_kn,acc_test_kn,p_kn,r_kn = calculat_metrics(y_train,y_test,y_pred_train,y_pred_test)
+
+#Draw diagram
+
+acc_train = [acc_train_rf,acc_train_svm,acc_train_kn,acc_train_ann]
+acc_test = [acc_test_rf,acc_test_svm,acc_test_kn,acc_test_ann]
+p = [p_rf,p_svm,p_kn,p_ann]
+r = [r_rf,r_svm,r_kn,r_ann]
+
+title_b = ["RF" , "SVM", "KN" , "AN" ]
+colors = ["black", "red", "yellow", "orange"]
+
+data = [acc_train, acc_test, p, r]
+title = ["Train Accuracy ", "Test Accuracy", "Precision","Recall"]
+position = [(0,0), (0,1), (1,0), (1,1) ]
+
+fig,axes = plt.subplots(2,2, figsize= (12,10) )
+fig.suptitle("Accutacy" "Precidion" "Recall")
+
+for  titles,datas,positions in zip (title,data,position):
+    axes[positions].bar(title_b,datas, color = colors)
+    axes[positions].set_title(titles)
+    axes[positions].grid()
+
+plt.tight_layout(rect=[0, 1, 1, 0.95 ])
+plt.show()    
+
+
